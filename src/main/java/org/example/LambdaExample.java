@@ -71,17 +71,17 @@ public class LambdaExample {
         //////////////////////////////////////
         banner("Listing active users with age > 8 sorted by name");
         // TODO With functional interfaces declared
-        Predicate<User>agesGreaterThanEightPredicate=new Predicate<User>() {
+        Predicate<User>activeUsersWithAgesGreaterThanEightPredicate=new Predicate<User>() {
             @Override
             public boolean test(User user) {
-                return user.age>8;
+                return user.age>8 && user.active;
             }
         };
-        repository.select(agesGreaterThanEightPredicate,Comparator.comparing(user -> user.name));
+        repository.select(activeUsersWithAgesGreaterThanEightPredicate,Comparator.comparing(user -> user.name));
         ////////////////////////////////////
         banner("Listing active users with age > 8 sorted by name - lambda");
         // TODO With functional interfaces used directly
-          repository.select(user -> user.age>8,Comparator.comparing(user -> user.name));
+          repository.select(user -> user.age>8 && user.active,Comparator.comparing(user -> user.name));
     }
 
     private static void banner(final String m) {
