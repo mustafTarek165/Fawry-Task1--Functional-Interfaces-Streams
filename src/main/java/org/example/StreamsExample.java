@@ -56,6 +56,12 @@ public class StreamsExample {
                 return author.books.stream();
             }
         };
+        Predicate<Book>publishedBook=new Predicate<Book>() {
+            @Override
+            public boolean test(Book book) {
+                return book.published;
+            }
+        };
         Consumer<Book>bookPrintConsumer=new Consumer<Book>() {
             @Override
             public void accept(Book book) {
@@ -63,15 +69,17 @@ public class StreamsExample {
             }
         };
 
-        authors.stream().filter(activeAuthor)
+        authors.stream()
                 .flatMap(mapAuthorBooks)
+                .filter(publishedBook)
                 .forEach(bookPrintConsumer);
 
         ///////////////////////////////////////////
         banner("Active books for all authors - lambda");
         // TODO With functional interfaces used directly
-      authors.stream().filter(author -> author.active)
+      authors.stream()
               .flatMap(author -> author.books.stream())
+              .filter(book -> book.published)
               .forEach(System.out::println);
         //////////////////////////////////////////
         banner("Average price for all books in the library");
@@ -100,7 +108,7 @@ public class StreamsExample {
              Predicate<Author>activeAutherHasBookAtLeastPredicate=new Predicate<Author>() {
                  @Override
                  public boolean test(Author author) {
-                     return author.active&& author.books.stream().anyMatch(book -> book.published);
+                     return author.active&& author.books.stream().anyMatch(publishedBook);
                  }
              };
              authors.stream().filter(activeAutherHasBookAtLeastPredicate).forEach(authorPrintConsumer);
